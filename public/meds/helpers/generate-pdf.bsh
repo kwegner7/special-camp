@@ -1,0 +1,76 @@
+#!/bin/bash
+
+    declare -r RUN_LOCAL=false
+
+    declare -rx RUN_FROM=$PWD
+    #echo -e "\nRunning from $RUN_FROM"
+    #echo -e "Generating PDF files ..."
+
+    declare -r VENDOR="./vendor"
+    declare -r PUBLIC="./public"
+    declare -r F2012="$PUBLIC/meds/out/2013"
+    declare -r PDF="$PUBLIC/meds/out/2013/pdf"
+
+    #declare PDFTK="$VENDOR/plugins/pdftk"
+    #declare PDFTK="/app/vendor/plugins/pdftk"
+    #declare PDFTK="/app/vendor/bundle/ruby/1.9.1/gems/pdftk-0.0.4/generators/pdftk"
+    declare PDFTK="/usr/bin/pdftk"
+
+    #declare WKHTMLTOPDF="$VENDOR/plugins/wkhtmltopdf"
+    #declare WKHTMLTOPDF="/app/vendor/plugins/wkhtmltopdf"
+    #declare WKHTMLTOPDF="./vendor/plugins/wkhtmltopdf"
+    #declare WKHTMLTOPDF="./vendor/bundle/bin/wkhtmltopdf"
+    #declare WKHTMLTOPDF="/usr/bin/wkhtmltopdf"
+
+    if $RUN_LOCAL
+    then
+        declare WKHTMLTOPDF="/home/kurt/.rvm/gems/ruby-1.9.3-p429/bin/wkhtmltopdf"
+    else
+        declare WKHTMLTOPDF="/app/vendor/bundle/ruby/1.9.1/gems/wkhtmltopdf-heroku-1.0.0/bin/wkhtmltopdf-linux-amd64"
+    fi
+
+    declare ALL_FOLDERS="$F2012/Master-Schedule/html"
+    declare ALL_FOLDERS=$(find $F2012 -name "html" -type d -print)
+
+    IFS=$'\n'
+    if true
+    then
+        mkdir --parents "$PDF"
+        for HTML_FOLDER in $ALL_FOLDERS
+        do
+            declare FOLDER=$(dirname $HTML_FOLDER)
+            declare REPORT_NAME=$(basename $FOLDER)
+            if false
+            then
+                for FILE in $(find "$HTML_FOLDER" -name "*Wednesday*.html" -type f -print)
+                do
+                    if echo $FILE | grep --silent 'Leftover-Meds'
+                    then
+                        echo "Portrait $FILE.pdf"
+                        $WKHTMLTOPDF --page-size Letter --orientation Portrait $FILE $FILE.pdf   
+                    else    
+                        echo "Landscape $FILE.pdf"
+                        $WKHTMLTOPDF --page-size Letter --orientation Landscape $FILE $FILE.pdf
+                    fi  
+                done
+                $PDFTK $HTML_FOLDER/*.html.pdf cat output $PDF/${REPORT_NAME}.pdf
+            else
+                $WKHTMLTOPDF --quiet --page-size Letter --orientation Landscape $HTML_FOLDER/*.html $PDF/${REPORT_NAME}.pdf
+            fi
+        done
+    fi
+    cat $F2012/TOC.html | sed 's@HREF="@HREF="pdf/@' | sed 's@/TOC.html@.pdf@' > $F2012/PDF.html
+    IFS=$'\x20\t\n'
+
+    exit 0
+
+/app/bin/wkhtmltopdf
+ /app/vendor/bundle/ruby/1.9.1/bin/wkhtmltopdf
+ /app/vendor/bundle/bin/wkhtmltopdf
+ /app/vendor/bundle/ruby/1.9.1/gems/wkhtmltopdf-0.1.2/bin/wkhtmltopdf
+ /app/vendor/plugins/wkhtmltopdf
+ /app/vendor/bundle/ruby/1.9.1/gems/pdftk-0.0.4/generators/pdftk
+ /app/vendor/plugins/pdftk
+
+
+    

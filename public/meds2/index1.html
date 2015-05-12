@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <base href="http://0.0.0.0:3000/meds/" target="_self">
+	<title>Special Camp</title>
+
+    <style>
+
+        .main
+        {
+            font-family:Verdana, Geneva, sans-serif;
+            font-size:20px;
+            font-weight:bold;
+            color:green;
+            text-align:left;
+            margin-left:150px;
+            text-decoration:none;
+            line-height:150%
+        }
+
+        .heading
+        {
+             font-family:Verdana, Geneva, sans-serif;
+             font-size:18px;
+             font-weight:bold;
+             color:black;
+             text-align:left;
+             margin-left:0px;
+             text-decoration:none;
+             line-height:150%;
+        }
+
+        .goto
+        {
+             font-family:Verdana, Geneva, sans-serif;
+             font-size:18px;
+             font-weight:bold;
+             color:blue;
+             text-align:left;
+             margin-left:0px;
+             text-decoration:underline;
+             line-height:150%;
+             padding-left:20pt;
+        }
+        
+        .tbl
+        {
+             font-family:Verdana, Geneva, sans-serif;
+             font-size:16px;
+             font-weight:bold;
+             color:black;
+             text-align:left;
+             margin-left:20px;
+             text-decoration:underline;
+             line-height:150%;
+             padding-left:20pt;
+        }
+        
+        td
+        {
+            width:170px;
+            white-space:nowrap;
+        }
+       
+        td.week
+        {
+            width:60px;
+            white-space:nowrap;
+        }
+       
+        td.camper
+        {
+            width:200px;
+            white-space:nowrap;
+        }
+       
+        a
+        {
+            color:black;
+        }
+        
+        a.camper
+        {
+            color:blue;
+        }
+        
+        .text
+        {
+             font-family:Verdana, Geneva, sans-serif;
+             font-size:12px;
+             font-weight:bold;
+             black;
+             text-align:left;
+             margin-left:0px;
+             text-decoration:normal;
+             line-height:150%;
+             padding-left:20pt;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!---------------------------------------------------------------------->
+    <div><hr><span class=main>FORMS FOR HEALTH SUPERVISOR</span><hr><br>
+    
+    <a class=goto href=printform?formtype=hs-master-schedule&dest=bvsatow@hpeprint.com&year=2014&refresh=check
+        >Health Supervisor Master Schedule</a><br>
+    <table class=tbl>
+      <tr>
+        <td class=week><a href=printform?formtype=hs-master-schedule&day=sun&dest=bvsatow@hpeprint.com&year=2014&refresh=check>Sun</a></td>
+        <td class=week><a href=printform?formtype=hs-master-schedule&day=mon&dest=bvsatow@hpeprint.com&year=2014&refresh=check>Mon</a></td>
+        <td class=week><a href=printform?formtype=hs-master-schedule&day=tue&dest=bvsatow@hpeprint.com&year=2014&refresh=check>Tue</a></td>
+        <td class=week><a href=printform?formtype=hs-master-schedule&day=wed&dest=bvsatow@hpeprint.com&year=2014&refresh=check>Wed</a></td>
+        <td class=week><a href=printform?formtype=hs-master-schedule&day=thu&dest=bvsatow@hpeprint.com&year=2014&refresh=check&day=thu>Thu</a></td>
+        <td class=week><a href=printform?formtype=hs-master-schedule&day=fri&dest=bvsatow@hpeprint.com&year=2014&refresh=check>Fri</a></td>
+        <td class=week><a href=printform?formtype=hs-master-schedule&day=sat&dest=bvsatow@hpeprint.com&year=2014&refresh=check>Sat</a></td>
+        <td class=week><a href=printform?formtype=hs-master-schedule&day=asneeded&dest=bvsatow@hpeprint.com&year=2014&refresh=check>As&nbsp;Needed</a></td>
+      </tr>
+    </table><br>
+
+    <a class=goto href=printform?formtype=hs-med-audit-sheets&dest=bvsatow@hpeprint.com&year=2014&refresh=check
+    >Meds Administered by Health Supervisor</a><br>
+        
+    <table class=tbl>

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#cd /working/rails/special-camp/public/meds2
+cp ./meds/out/CamperList/out.html ./meds2/campers.html
+
+cat ./meds2/index1.html                                               >  ./meds2/index.html
+cat ./meds2/campers.html | sed "s@INSERT@hs-med-audit-sheets@"        >> ./meds2/index.html
+cat ./meds2/index2.html                                               >> ./meds2/index.html
+cat ./meds2/campers.html | sed "s@INSERT@caregroup-med-audit-sheets@" >> ./meds2/index.html
+cat ./meds2/index3.html                                               >> ./meds2/index.html
+cat ./meds2/campers.html | sed "s@INSERT@caregroup-hs-med-schedule@"  >> ./meds2/index.html
+cat ./meds2/index4.html                                               >> ./meds2/index.html
+cat ./meds2/campers.html | sed "s@INSERT@guardian-signature-sheet@"   >> ./meds2/index.html
+cat ./meds2/index5.html                                               >> ./meds2/index.html
+cat ./meds2/campers.html | sed "s@INSERT@leftover-meds-receipt@"      >> ./meds2/index.html
+cat ./meds2/index6.html                                               >> ./meds2/index.html
+cp  ./meds2/index.html ./index.html

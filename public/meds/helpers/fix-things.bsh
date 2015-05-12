@@ -1,0 +1,118 @@
+#!/bin/bash
+
+##############################################################################
+# Switch the URL
+# http://0.0.0.0:3000 --> http://stark-retreat-1229.herokuapp.com
+#
+# This shows where the "public" directory is located
+# For example, the href points to:
+#     http://0.0.0.0:3000/meds/out/2013/printit.pdf
+##############################################################################
+declare -rx RUN_FROM=$PWD
+{
+    declare -i NUMBER_PARAMS=${#@}
+    
+    if (( $NUMBER_PARAMS == 1 )) && [[ $1 == "--server-is-heroku" ]]
+    then
+        declare IS_HEROKU=true
+    elif (( $NUMBER_PARAMS == 1 )) && [[ $1 == "--server-is-pc" ]]
+    then
+        declare IS_HEROKU=false
+    else
+        echo "ERROR: must indicate either --server-is-heroku or --server-is-pc"
+        exit 0
+    fi
+
+    declare RAILS_FOLDER="/home/kurt/working/rails/special-camp"
+    echo -e "\nRunning from $RUN_FROM"
+    declare -ax FILESA=(
+      "${RAILS_FOLDER}/app/views/top/printLocalOnePage.html.erb"
+      "${RAILS_FOLDER}/app/views/top/createPdf.html.erb"
+      "${RAILS_FOLDER}/app/views/top/printRemoteOnePage.html.erb"
+      "${RAILS_FOLDER}/app/views/top/downloadAllPages.html.erb"
+      "${RAILS_FOLDER}/app/views/layouts/what_to_do.html.erb"
+      "${RAILS_FOLDER}/app/views/layouts/finished.html.erb"
+      "${RAILS_FOLDER}/app/views/layouts/printform.html.erb"
+      "${RAILS_FOLDER}/app/views/layouts/Instructions.html"
+      "${RAILS_FOLDER}/app/views/meds/downloadAllPages.html.erb"
+      "${RAILS_FOLDER}/app/views/meds/printform.html.erb"
+      "${RAILS_FOLDER}/app/views/meds/index.html.erb"
+      "${RAILS_FOLDER}/public/top_menu.html"
+    )
+
+    IFS=$'\n'
+    cd ${RAILS_FOLDER}/app/views/top
+    for FILE in ${FILESA[*]}
+    do
+        if $IS_HEROKU
+        then
+            cat "${FILE}" \
+          | sed 's@0.0.0.0:3000@stark-retreat-1229.herokuapp.com@' \
+          > /tmp/fix.erb
+        else
+            # set this to TRUE before uploading stark
+            if false
+            then
+	            cat "${FILE}" \
+	          | sed 's@0.0.0.0:3000@stark-retreat-1229.herokuapp.com@' \
+	          > /tmp/fix.erb
+	        else
+                cat "${FILE}" \
+              | sed 's@stark-retreat-1229.herokuapp.com@0.0.0.0:3000@' \
+              > /tmp/fix.erb
+            fi
+        fi
+        echo SERVER NAME CHANGED $FILE
+        cat /tmp/fix.erb > "${FILE}"
+    done
+    IFS=$'\x20\t\n'
+
+    exit 0
+}
+
+
+
+
+
+ def createHtmlPages0(formtype, camperid, day, dest, page, year, refresh)
+
+      report_folder = "./public/meds/out/#{year}/#{formtype}"
+      #if not Dir.exists?( report_folder )
+      if true
+      then
+
+        if Rails.env.production?
+        then
+           website = "HEROKU"
+        else
+           website = "RAILS"
+        end
+
+        Dir.chdir("./public/meds")
+        puts "    2) CONVERTING DATABASE TO HTML FILES"
+
+        if formtype == 'all'      
+        then
+            debug = %x(python ./src/MasterControl.py #{website} "Master-Schedule"                      "#{camperid}" "#{day}" "#{dest}" "#{page}" "#{year}" "#{@@timestamp}");# puts debug           
+            debug = %x(python ./src/MasterControl.py #{website} "Meds-Administered-By-HS"              "#{camperid}" "#{day}" "#{dest}" "#{page}" "#{year}" "#{@@timestamp}");# puts debug 
+            debug = %x(python ./src/MasterControl.py #{website} "Meds-Administered-By-HS-Summarized"   "#{camperid}" "#{day}" "#{dest}" "#{page}" "#{year}" "#{@@timestamp}");# puts debug 
+            debug = %x(python ./src/MasterControl.py #{website} "Meds-Administered-During-LA-Bus-Trip" "#{camperid}" "#{day}" "#{dest}" "#{page}" "#{year}" "#{@@timestamp}");# puts debug 
+            debug = %x(python ./src/MasterControl.py #{website} "Meds-Administered-In-Cabin"           "#{camperid}" "#{day}" "#{dest}" "#{page}" "#{year}" "#{@@timestamp}");# puts debug 
+            debug = %x(python ./src/MasterControl.py #{website} "Guardian-Signature"                   "#{camperid}" "#{day}" "#{dest}" "#{page}" "#{year}" "#{@@timestamp}");# puts debug 
+            debug = %x(python ./src/MasterControl.py #{website} "Leftover-Meds"                        "#{camperid}" "#{day}" "#{dest}" "#{page}" "#{year}" "#{@@timestamp}");# puts debug 
+            @@number_pages = %x(python ./src/classes/pdf/Pdf.py "#{formtype}" "#{camperid}" "#{day}" "#{page}")
+        else
+            debug = %x(python ./src/MasterControl.py #{website} "#{formtype}" "#{camperid}" "#{day}" "#{dest}" "#{page}" "#{year}" "#{@@timestamp}");        
+            @@number_pages = %x(python ./src/classes/pdf/Pdf.py  #{website} "#{formtype}" "#{camperid}" "#{day}" "#{page}")
+        end
+        puts "    3) CONVERTING HTML FILES TO A SINGLE PDF FILE"
+        Dir.chdir("../..")
+        
+      else
+        puts "\nTopController: NO NEED TO UPDATE CSV FILES FOR #{formtype}"
+      end
+  end
+
+
+
+

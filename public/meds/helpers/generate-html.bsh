@@ -1,0 +1,33 @@
+#!/bin/bash
+
+##############################################################################
+# Run a program from here
+##############################################################################
+declare -rx RUN_FROM=$PWD
+{
+    declare WEBSITE="RAILS"
+
+    echo -e "\nRunning from $RUN_FROM"
+    echo -e "Cleaning all .pyc files under $RUN_FROM"
+    find . -name "*.pyc" -exec rm {} ';'
+    echo -e "Cleaning all output files under $RUN_FROM\n"
+    rm -rf out/2013
+
+    python ./src/MasterControl.py ${WEBSITE} Master-Schedule
+    python ./src/MasterControl.py ${WEBSITE} Meds-Administered-By-HS
+    python ./src/MasterControl.py ${WEBSITE} Meds-Administered-By-HS-Summarized
+    python ./src/MasterControl.py ${WEBSITE} Meds-Administered-In-Cabin
+    python ./src/MasterControl.py ${WEBSITE} Meds-Administered-During-LA-Bus-Trip
+    python ./src/MasterControl.py ${WEBSITE} Guardian-Signature
+    python ./src/MasterControl.py ${WEBSITE} Leftover-Meds
+    exit 0
+    cp --preserve=timestamps /home/kurt/Downloads/Med_Schedule_Items.csv ./in/
+}
+    
+#CSV files written to the folder /working/python7/db/out/2013/Master-Schedule
+#CSV files written to the folder /working/python7/db/out/2013/Meds-Administered-By-HS
+#CSV files written to the folder /working/python7/db/out/2013/Meds-Administered-By-HS-Summarized
+#CSV files written to the folder /working/python7/db/out/2013/Meds-Administered-In-Cabin
+#CSV files written to the folder /working/python7/db/out/2013/Meds-Administered-During-LA-Bus-Trip
+#CSV files written to the folder /working/python7/db/out/2013/Guardian-Signature
+#CSV files written to the folder /working/python7/db/out/2013/Leftover-Meds

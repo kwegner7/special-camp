@@ -1,0 +1,4 @@
+#!/bin/bash
+
+    cd /working/rails/meds && ./public/meds/helpers/upload-to-heroku.bsh --local
+

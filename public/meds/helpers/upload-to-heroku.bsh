@@ -1,0 +1,208 @@
+#!/bin/bash
+
+#-------------------------------------------------------------------------------
+# copy all .py files into the rails space
+#-------------------------------------------------------------------------------
+function copy_py_files()
+{ 
+    declare DEST="$2"
+    rm -rf "${DEST}"
+    echo COPYING FROM $1 TO $2
+    IFS=$'\n'
+    cd "$1"
+    declare FILES=$(find . -name "*.py" -print)
+    for FILE in $FILES
+    do
+        echo Copying Python file $FILE
+        mkdir --parents ${DEST}/$(dirname $FILE)
+        cp $FILE ${DEST}/$(dirname $FILE)
+    done
+    IFS=$'\x20\t\n'
+}
+
+#-------------------------------------------------------------------------------
+# MAIN
+#-------------------------------------------------------------------------------
+function main()
+{
+ 
+    declare -x         RAILS="/home/kurt/working/rails/special-camp/"
+    declare -x        PUBLIC="/home/kurt/working/rails/special-camp/public/"
+
+    declare -x   PYTHON_FROM="/home/kurt/working/python/special-camp/src"
+    declare -x     PYTHON_TO=${PUBLIC}"meds/src/"
+
+    declare -x   PYTHON_FROM1="/home/kurt/working/python/special-camp/finance-2014-06-07/src/classes/database"
+    declare -x     PYTHON_TO1=${PUBLIC}"meds/src/classes/database/"
+
+    declare -x   PYTHON_FROM2="/home/kurt/working/python/special-camp/finance-2014-06-07/src/classes/html"
+    declare -x     PYTHON_TO2=${PUBLIC}"meds/src/classes/html/"
+
+    declare -x   PYTHON_FROM3="/home/kurt/working/python/special-camp/finance-2014-06-07/src/classes/report"
+    declare -x     PYTHON_TO3=${PUBLIC}"meds/src/classes/report/"
+
+    declare -x   PYTHON_FROM4="/home/kurt/working/python/special-camp/finance-2014-06-07/src/classes/utils"
+    declare -x     PYTHON_TO4=${PUBLIC}"meds/src/classes/utils/"
+
+    declare -x   PYTHON_FROM5="/home/kurt/working/python/special-camp/finance-2014-06-07/src/GoSpecialCamp.py"
+    declare -x     PYTHON_TO5=${PUBLIC}"meds/src/"
+
+	declare -x     IN_FOLDER=${PUBLIC}"meds/in/"
+	declare -x    OUTPUT_CSV=${IN_FOLDER}
+
+    if false
+    then
+	    declare -x     IN_FOLDER=${PUBLIC}"meds/in/"
+	    declare -x     INPUT_CSV=${PUBLIC}"meds/defaults/Med_Schedule_Items.csv"
+	    declare -x    OUTPUT_CSV=${IN_FOLDER}
+	    declare -x     INPUT_TOC=${PUBLIC}"meds/defaults/TOC.html"
+	    declare -x OUTPUT_FOLDER=${PUBLIC}"meds/out/2014/" 
+	    declare -x    OUTPUT_TOC=${OUTPUT_FOLDER}"TOC.html" 
+
+	    # indexINITIALLOAD is a fixed startup top level menu
+	    # it contains no references to campers
+	    declare -x   INPUT_INDEX=${PUBLIC}"meds2/indexINITIALLOAD.html"
+	    declare -x  OUTPUT_INDEX=${RAILS}"app/views/meds/index.html.erb"
+	    declare -x  OUTPUT_INDEX1=${RAILS}"public/top_menu.html"
+        echo $INPUT_CSV
+    fi
+
+    declare -x  INPUT_TIMESTAMP=${PUBLIC}"meds/defaults/timestamp.txt"
+    declare -x  INPUT_NUMBERLINES=${PUBLIC}"meds/defaults/numberlines.txt"
+    declare -x  INPUT_DEFAULTDEST=${PUBLIC}"meds/defaults/defaultdest.txt"
+
+    echo -e "(0) Preparing the local public rails folder:"
+    echo -e "    "$PUBLIC
+    echo -e "(1) Copying all python source code"
+    echo -e "    from "$PYTHON_FROM
+    echo -e "    to   "$PYTHON_TO
+    copy_py_files "$PYTHON_FROM" "$PYTHON_TO"
+    copy_py_files "$PYTHON_FROM1" "$PYTHON_TO1"
+    copy_py_files "$PYTHON_FROM2" "$PYTHON_TO2"
+    copy_py_files "$PYTHON_FROM3" "$PYTHON_TO3"
+    copy_py_files "$PYTHON_FROM4" "$PYTHON_TO4"
+    cp "$PYTHON_FROM5" "$PYTHON_TO5"
+
+    # create an initial TOC and complete outputs
+    # using pre-loaded meds csv
+    # all outputs except the top TOC will be deleted
+    # when the database is refreshed
+
+    echo -e "(2) Copying the default timestamp and number of lines"
+    echo -e "    from "$INPUT_CSV
+    echo -e "    to   "$OUTPUT_CSV 
+    mkdir --parents $IN_FOLDER
+    #cp $INPUT_CSV $OUTPUT_CSV 
+    cp $INPUT_TIMESTAMP $OUTPUT_CSV 
+    cp $INPUT_NUMBERLINES $OUTPUT_CSV
+    cp $INPUT_DEFAULTDEST $OUTPUT_CSV
+    
+
+    echo -e "(3) Clear the out folder /home/kurt/working/rails/special-camp/public/meds/out"
+    echo -e "    and copy in the first html file required, it is top level TOC.html"
+    echo -e "    from "$INPUT_TOC
+    echo -e "    to   "$OUTPUT_TOC
+    echo -e "    This TOC.html will generate the html outputs for each report type"
+    #rm -rf $OUTPUT_FOLDER
+    #mkdir --parents $OUTPUT_FOLDER
+    #cp $INPUT_TOC $OUTPUT_TOC
+
+    if false
+    then     
+        echo -e "(3) Script generate-html.bsh executes Python code "
+        echo -e "to write initial HTML files into the rails local area"  
+        cd /home/kurt/working/rails/special-camp/public/meds && ./helpers/generate-html.bsh --rails
+    fi
+
+    # this is where rails processing starts
+    echo -e "(4) Copy the highest level index.html into the rails space" 
+    echo -e "    This allows the user to get again the input Meds database"
+    echo -e "    from "$INPUT_INDEX
+    echo -e "    to   "$OUTPUT_INDEX
+    
+    #if [[ $1 == "--server-is-heroku" ]]
+    #then
+    #    cat $INPUT_INDEX | sed 's@0.0.0.0:3000@stark-retreat-1229.herokuapp.com@' > $OUTPUT_INDEX
+    #    cat $INPUT_INDEX | sed 's@0.0.0.0:3000@stark-retreat-1229.herokuapp.com@' > $OUTPUT_INDEX1
+    #else
+    #    cat $INPUT_INDEX | sed 's@stark-retreat-1229.herokuapp.com@0.0.0.0:3000@' > $OUTPUT_INDEX
+    #    cat $INPUT_INDEX | sed 's@stark-retreat-1229.herokuapp.com@0.0.0.0:3000@' > $OUTPUT_INDEX1
+    #fi
+    
+    cd $RAILS && ./public/meds/helpers/fix-things.bsh $1
+    
+    if [[ $1 == "--server-is-pc" ]]
+    then
+        echo -e "(5) Bundle and install /home/kurt/working/rails/special-camp as local rails server" 
+        bundle install
+        #echo -e "(6) Helpers in the bundle" 
+        #bundle show [gemname]
+        echo -e "(6) Start the server" 
+        rails server
+        return 0
+    fi
+
+
+    if [[ $1 == "--server-is-heroku" ]]
+    then
+        echo -e "(5) Checkin the local rails area in case there have been changes" 
+        echo ---------------------------------------------
+        git status
+        echo ---------------------------------------------
+        git commit -a -m "update"
+        #heroku config:set ERROR_PAGE_URL=
+        #   http://http:/stark-retreat-1229.herokuapp.com/meds/out/2013/TOC.html
+        echo -e "(6) Upload the local rails area to Heroku at stark-retreat-1229.herokuapp.com" 
+        git push heroku master
+        return 0
+    fi
+}
+main "$@"
+exit $?
+
+#-------------------------------------------------------------------------------
+# how to invoke
+#-------------------------------------------------------------------------------
+if true
+then
+    #cd /home/kurt/working/python7/db && ./run.bsh
+    cd /home/kurt/working/rails/special-camp && ./public/meds/helpers/upload-to-heroku.bsh --server-is-pc
+    #cd /home/kurt/working/rails/meds && ./public/meds/helpers/upload-to-heroku.bsh --server-in-cloud
+    #konqueror http://stark-retreat-1229.herokuapp.com &
+fi
+
+#-------------------------------------------------------------------------------
+# manually download the latest quickbase meds schedule items
+#-------------------------------------------------------------------------------
+if true
+then
+    cd /home/kurt/Downloads/
+    rm  *.csv
+    konqueror https://www.quickbase.com/db/bhqk2yzah?a=q&qid=1 &
+fi
+:;
+
+#-------------------------------------------------------------------------------
+# open page
+#-------------------------------------------------------------------------------
+if true
+then
+    konqueror http://stark-retreat-1229.herokuapp.com &
+fi
+:;
+
+
+#-------------------------------------------------------------------------------
+# useful gedits
+#-------------------------------------------------------------------------------
+if false
+then
+    cd /working/rails/meds
+    gedit ./public/index-meds.html &
+    gedit ./public/meds/helpers/generate-pdf.bsh &
+    gedit ./app/controllers/top_controller.rb &
+fi
+:;
+
+
+

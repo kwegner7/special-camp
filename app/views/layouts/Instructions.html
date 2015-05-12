@@ -1,0 +1,252 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+	<title>Special Camp</title>
+
+    <!-- <link rel="stylesheet" type="text/css" href="./html-styles.css" /> -->
+    <style>
+
+        .main
+        {
+            font-family:Verdana, Geneva, sans-serif;
+            font-size:20px;
+            font-weight:bold;
+            color:green;
+            text-align:center;
+            margin-left:0px;
+            text-decoration:none;
+            line-height:150%
+        }
+
+        .heading
+        {
+             font-family:Verdana, Geneva, sans-serif;
+             font-size:18px;
+             font-weight:bold;
+             color:black;
+             text-align:left;
+             margin-left:0px;
+             text-decoration:none;
+             line-height:150%;
+        }
+
+        .goto
+        {
+             font-family:Verdana, Geneva, sans-serif;
+             font-size:18px;
+             font-weight:bold;
+             color:blue;
+             text-align:left;
+             margin-left:0px;
+             text-decoration:underline;
+             line-height:150%;
+             padding-left:20pt;
+        }
+        
+        .text
+        {
+             font-family:Verdana, Geneva, sans-serif;
+             font-size:12px;
+             font-weight:bold;
+             black;
+             text-align:left;
+             margin-left:0px;
+             text-decoration:normal;
+             line-height:150%;
+             padding-left:20pt;
+        }
+
+    </style>
+</head>
+
+<body>
+<a name="TOP"></a>
+
+    <!---------------------------------------------------------------------->
+    <hr>
+    <p class=main>HOW TO CREATE A USER INTERFACE FOR SPECIAL CAMP MED REPORTS</p>
+
+    <!---------------------------------------------------------------------->
+    <div><hr><br>
+    
+    <a class=goto target="_blank" href=
+    "http://stark-retreat-1229.herokuapp.com/meds/printform?formtype=hs-master-schedule&day=wed&dest=bvsatow@hpeprint.com"
+    >Master Schedule for Wednesday</a><br><br>
+    
+    <a class=goto target="_blank" href=
+    "http://stark-retreat-1229.herokuapp.com/meds/printform?formtype=caregroup-med-audit-sheets&dest=kurt.wegner@gmail.com"
+    >Medications Administered in Camper Care Group</a><br><br>
+    
+    <a class=goto target="_blank" href=
+    "http://stark-retreat-1229.herokuapp.com/meds/printform?formtype=caregroup-med-audit-sheets&camperid=548&dest=default"
+    >Instructions to Cabin Leader for a Particular Camper</a><br><br>
+   
+    <a class=goto target="_blank" href=
+    "http://stark-retreat-1229.herokuapp.com/meds/printform?formtype=all&camperid=548&dest=bvsatow@hpeprint.com"
+    >All Forms For a Particular Camper</a><br><br>
+
+
+Add print all 220 pages
+    
+    </div>
+    <!---------------------------------------------------------------------->
+    <div><hr>
+    
+    <p class=text>
+    Several parameters may be passed to the URL to select different kinds of reports.<br>
+    The URLs associated with
+    the above four links are:<br><br>
+
+    <span style="color:red">
+    "http://stark-retreat-1229.herokuapp.com/meds/printform?formtype=hs-master-schedule&day=wed&dest=bvsatow@hpeprint.com"
+    </span><br><br>
+
+    <span style="color:red">
+    "http://stark-retreat-1229.herokuapp.com/meds/printform?formtype=caregroup-med-audit-sheets&dest=bvsatow@hpeprint.com"
+    </span><br><br>
+
+    <span style="color:red">
+    "http://stark-retreat-1229.herokuapp.com/meds/printform?formtype=caregroup-med-audit-sheets&camperid=548&dest=bvsatow@hpeprint.com"
+    </span><br><br>
+
+    <span style="color:red">
+    "http://stark-retreat-1229.herokuapp.com/meds/printform?formtype=all&camperid=548&dest=bvsatow@hpeprint.com"
+    </span><br><br>
+
+    The preamble to the http should contain credentials to avoid having to enter password.<br>
+
+
+
+    <hr>
+    The parameters specified in the URL are:<br>
+    <ul class=text>
+
+    <li>
+        <span style="text-decoration:underline">formtype</span><br>
+        This parameter indicates which of the seven forms to select.<br>
+        Options:
+            <ul class=text>
+            <li>formtype=all</li>
+            <li>formtype=hs-master-schedule</li>
+            <li>formtype=hs-med-audit-sheets</li>
+            <li>formtype=caregroup-hs-med-schedule</li>
+            <li>formtype=bus-med-audit-sheet</li>
+            <li>formtype=caregroup-med-audit-sheets</li>
+            <li>formtype=guardian-signature-sheet</li>
+            <li>formtype=leftover-meds-receipt</li>
+            </ul><br>
+        If not specifed, the default is:
+            <ul class=text>
+            <li>formtype=all</li>
+            </ul><br>
+    </li>
+
+    <li>
+        <span style="text-decoration:underline">year</span><br>
+        This parameter is the year of the Special Camp database.<br>
+        If not specifed, the default is:
+            <ul class=text>
+            <li>year=2014</li>
+            </ul><br>
+    </li>
+
+    <li>
+        <span style="text-decoration:underline">camperid</span><br>
+        This parameter is the id number of a camper.<br>
+        If not specifed, the default is:
+            <ul class=text>
+            <li>camperid=all</li>
+            <li>camperid={some camper ID}</li>
+            </ul><br>
+    </li>
+
+    <li>
+        <span style="text-decoration:underline">day</span><br>
+        This parameter indicates the day of the week.<br>
+        Options:
+            <ul class=text>
+            <li>day=all</li>
+            <li>day=sun</li>
+            <li>day=mon</li>
+            <li>day=tue</li>
+            <li>day=wed</li>
+            <li>day=thu</li>
+            <li>day=fri</li>
+            <li>day=sat</li>
+            <li>day=asneeded</li>
+            </ul><br>
+        If not specifed, the default is:
+            <ul class=text>
+            <li>day=all</li>
+            </ul><br>
+    </li>
+
+    <li>
+        <span style="text-decoration:underline">page</span><br>
+        Some of the responses consist of multiple pages. For example, the HS Master Schedule for Tuesday consists
+        of 7 pages. This parameter specifies a particular page number to print.<br><br>
+        If not specifed, the default is:
+            <ul class=text>
+            <li>page=all</li>
+            </ul><br>
+    </li>
+
+    <li>
+        <span style="text-decoration:underline">refresh</span><br>
+        If the database has been changed it is necessary to load the new database items from the Quickbase website.
+        This takes a few seconds. This parameter indicates the conditions for reloading the database.<br><br>
+        Options:
+            <ul class=text>
+            <li>refresh=true
+                 unconditionally load the Quickbase Med Schedule Items Table
+            </li>
+            <li>refresh=false
+                 do not load the Quickbase Med Schedule Items Table
+            </li>
+            <li>refresh=check
+                 if the timestamps have changed on any of the 3 Quickbase tables
+        then load the Quickbase Med Schedule Items Table
+        otherwise do not load the Quickbase Med Schedule Items Table
+            </li>
+
+
+            </ul><br>
+        If not specifed, the default is:
+            <ul class=text>
+            <li>refresh=check</li>
+            </ul><br>
+    </li>
+
+    <li>
+        <span style="text-decoration:underline">dest</span><br>
+        This parameter is an email address indicating where the PDF file will be sent when the user
+        clicks on "PRINT REMOTELY". The "dest" field may be set to "dest=default" and the 
+        administrator may change the default by invoking a web service request "setdefault".
+        The default will hold until changed by sending a new "setdefault". 
+        The default will not be used if a particular dest is specified in the "dest" field of the "printform".  
+
+        <br>
+        Options:
+            <ul class=text>
+            <li>dest=default</li>
+            <li>dest={some email address}</li>
+
+            </ul><br>
+        If not specifed, the default is:
+            <ul class=text>
+            <li>dest=default</li>
+            </ul><br>
+        Here are examples of the format of the "setdefault" request:<br><br>
+
+        http://stark-retreat-1229.herokuapp.com/meds/setdefault?dest=kurt.wegner@gmail.com<br>
+        http://stark-retreat-1229.herokuapp.com/meds/setdefault?dest=bvsatow@hpeprint.com<br><br>
+    </li>
+
+    </ul>
+    </p>    
+    </div>
+    <hr>
+
+</body>
+</html>
